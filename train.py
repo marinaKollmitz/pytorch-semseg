@@ -43,6 +43,7 @@ def train(cfg, writer, logger):
 
     t_loader = data_loader(
         data_path,
+        sbd_path=cfg["data"]["sbd_path"], #FIXME Marina only for pascal?
         is_transform=True,
         split=cfg["data"]["train_split"],
         img_size=(cfg["data"]["img_rows"], cfg["data"]["img_cols"]),
@@ -51,6 +52,7 @@ def train(cfg, writer, logger):
 
     v_loader = data_loader(
         data_path,
+        sbd_path=cfg["data"]["sbd_path"], #FIXME Marina only for pascal?
         is_transform=True,
         split=cfg["data"]["val_split"],
         img_size=(cfg["data"]["img_rows"], cfg["data"]["img_cols"]),
@@ -116,6 +118,8 @@ def train(cfg, writer, logger):
 
     while i <= cfg["training"]["train_iters"] and flag:
         for (images, labels) in trainloader:
+            print "images: ", images.shape
+            print "labels: ", labels.shape
             i += 1
             start_ts = time.time()
             scheduler.step()
@@ -218,7 +222,7 @@ if __name__ == "__main__":
 
     run_id = random.randint(1, 100000)
     logdir = os.path.join("runs", os.path.basename(args.config)[:-4], str(run_id))
-    writer = SummaryWriter(log_dir=logdir)
+    writer = SummaryWriter(logdir=logdir)
 
     print("RUNDIR: {}".format(logdir))
     shutil.copy(args.config, logdir)
